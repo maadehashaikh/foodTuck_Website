@@ -15,7 +15,7 @@ const client = createClient({
 });
 
 const Latest_Blogs = () => {
-  const [blogdata, setBlogdata] = useState<any[]>([]);
+  const [blogdata, setBlogdata] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

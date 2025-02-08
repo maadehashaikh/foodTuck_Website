@@ -1,0 +1,5 @@
+T1,Check product listing ,check all products ,Verify products,Products displayed,Passed,No error found
+T2,Test menu page,saw data coming ,found no error,product displayed ,Passed,No error found
+T3,Check cart is protected route,saw without login,redirect to login page,cart page showed,Passed,No error found
+T4,Checkout page test,found an error,put required in every filed,check again,Passed,No error found
+T5,Order is storing,Found it perfect,Verify user's full data,,Passed,No error found
