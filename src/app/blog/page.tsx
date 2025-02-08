@@ -1,10 +1,10 @@
-import React from "react";
+import React, { FC }  from "react";
 import Latest_Blogs from "./LatestBlog";
 import NormalNavBar from "../components/General/NormalNavBar";
 import PageName from "../components/General/PageName";
 import RightSide from "./RightSide";
 
-const page = () => {
+const page: FC = () => {
   return (
     <>
       <NormalNavBar />

@@ -3,8 +3,8 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { Menu, X, ShoppingCart, Search } from "lucide-react";
 
-const Navbar = () => {
-  const [isOpen, setIsOpen] = useState(false);
+const Navbar: React.FC = () => {
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   return (
     <nav className="bg-black text-white py-4">
       <div className="w-full mx-auto px-4 text-center md:w-full">

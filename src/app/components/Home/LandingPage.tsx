@@ -10,7 +10,7 @@ import Our_Process from "./Our_Process";
 import Latest_Blogs from "../Blog/Latest_Blogs";
 import Status from "./Satus";
 
-const LandingPage = () => {
+const LandingPage: React.FC = () => {
   return (
     <>
       {/* Section 01 (Landing page)*/}

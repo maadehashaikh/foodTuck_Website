@@ -8,6 +8,18 @@ import { IoCalendarNumber } from "react-icons/io5";
 import { FaMessage } from "react-icons/fa6";
 import { FaUserCheck } from "react-icons/fa";
 
+type BlogItemType = {
+  image: {
+    asset: {
+      url: string;
+    };
+  };
+  date: string;
+  author: string;
+  title: string;
+  description: string;
+};
+
 const client = createClient({
   projectId: "2sz91eg7",
   dataset: "production",
@@ -18,28 +30,28 @@ const client = createClient({
 const builder = imageUrlBuilder(client);
 export const urlFor = (source: any) => builder.image(source);
 
-const BlogDetail = () => {
-  const { id } = useParams();
-  const [blogItem, setBlogItem] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+const BlogDetail: React.FC = () => {
+  const { id } = useParams<{ id: string }>();
+  const [blogItem, setBlogItem] = useState<BlogItemType | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     if (id) {
-      const fetchFoodItem = async () => {
+      const fetchBlogItem = async () => {
         try {
-          const data = await client.fetch(
+          const data: BlogItemType = await client.fetch(
             `*[_type == "blog" && _id == $id][0]`,
             { id }
           );
 
           setBlogItem(data);
         } catch (error) {
-          console.error("Error fetching food details:", error);
+          console.error("Error fetching blog details:", error);
         } finally {
           setLoading(false);
         }
       };
-      fetchFoodItem();
+      fetchBlogItem();
     }
   }, [id]);
 
@@ -57,13 +69,13 @@ const BlogDetail = () => {
         <div className="w-full md:w-1/2 flex justify-center">
           <Image
             src={urlFor(blogItem.image.asset).url()}
-            alt={blogItem.name}
+            alt={blogItem.title}
             width={400}
             height={200}
             className="rounded-lg"
           />
         </div>
-        <div className=" py-2 flex items-start justify-start gap-4">
+        <div className="py-2 flex items-start justify-start gap-4">
           <div className="flex items-center justify-normal gap-1">
             <IoCalendarNumber className="text-amber-500 text-center text-lg" />
             <p className="text-black text-sm">
@@ -80,16 +92,16 @@ const BlogDetail = () => {
           </div>
           <div className="flex items-center justify-normal gap-1">
             <FaUserCheck className="text-amber-500 text-center" />
-            <p className="text-black text-sm">Author :{blogItem.author}</p>
+            <p className="text-black text-sm">Author: {blogItem.author}</p>
           </div>
         </div>
         <div className="w-full md:w-1/2 mt-4 md:mt-0">
-          <h1 className="text-2xl md:text-3xl font-bold mb-2 text-black ">
+          <h1 className="text-2xl md:text-3xl font-bold mb-2 text-black">
             {blogItem.title}
           </h1>
-          <p className="mb-2 text-sm text-black pb-2">{blogItem.description}</p>
-          <p className="mb-2 text-sm text-black pb-2">{blogItem.description}</p>
-          <p className="mb-2 text-sm text-black pb-2">{blogItem.description}</p>
+          <p className="mb-2 text-sm text-black pb-2">
+            {blogItem.description}
+          </p>
         </div>
       </div>
     </>

@@ -1,7 +1,7 @@
 import React from "react";
 import ShopList from "../components/Shop_List/ShopList";
 
-const shoplist = () => {
+const shoplist: React.FC = () => {
   return (
     <>
       <ShopList />

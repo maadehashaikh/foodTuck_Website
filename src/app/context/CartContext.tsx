@@ -20,11 +20,15 @@ interface CartContextType {
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
-export const CartProvider = ({ children }: { children: ReactNode }) => {
-  const [cart, setCart] = useState<CartItem[]>([]);
-  const [discount, setDiscount] = useState<number>(0); // ✅ Moved inside the component
+interface CartProviderProps {
+  children: ReactNode;
+}
 
-  const addToCart = (item: CartItem) => {
+export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
+  const [cart, setCart] = useState<CartItem[]>([]);
+  const [discount, setDiscount] = useState<number>(0);
+
+  const addToCart = (item: CartItem): void => {
     setCart((prevCart) => {
       const existingItem = prevCart.find((cartItem) => cartItem.id === item.id);
       if (existingItem) {
@@ -39,7 +43,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
-  const updateCartItem = (id: string, quantity: number) => {
+  const updateCartItem = (id: string, quantity: number): void => {
     setCart((prevCart) =>
       prevCart.map((item) =>
         item.id === id ? { ...item, quantity: Math.max(quantity, 1) } : item
@@ -47,11 +51,11 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     );
   };
 
-  const removeFromCart = (id: string) => {
+  const removeFromCart = (id: string): void => {
     setCart((prevCart) => prevCart.filter((item) => item.id !== id));
   };
 
-  const applyCoupon = (code: string) => {
+  const applyCoupon = (code: string): void => {
     const validCoupons: Record<string, number> = {
       SAVE20: 20, // 20% discount
     };
@@ -79,7 +83,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-export const useCart = () => {
+export const useCart = (): CartContextType => {
   const context = useContext(CartContext);
   if (!context) {
     throw new Error("useCart must be used within a CartProvider");

@@ -3,31 +3,39 @@ import {
   SignedIn,
   SignedOut,
   SignInButton,
-  SignOutButton,
-  SignUp,
-  SignUpButton,
   UserButton,
 } from "@clerk/clerk-react";
-import { useState } from "react";
+import React, { useState, ChangeEvent, FormEvent } from "react";
 import { FaGoogle, FaApple, FaEnvelope, FaLock, FaUser } from "react-icons/fa";
 
-const SignIn = () => {
-  const [formData, setFormData] = useState({
+interface FormData {
+  name: string;
+  email: string;
+  password: string;
+  remember: boolean;
+}
+
+const SignIn: React.FC = () => {
+  const [formData, setFormData] = useState<FormData>({
     name: "",
     email: "",
     password: "",
     remember: false,
   });
 
-  const handleChange = (e) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
-    setFormData({ ...formData, [name]: type === "checkbox" ? checked : value });
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: type === "checkbox" ? checked : value,
+    }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log("Form submitted:", formData);
   };
+
   return (
     <div className="flex items-center justify-center min-h-screen">
       <SignedIn>
@@ -96,7 +104,10 @@ const SignIn = () => {
               />
               <label className="text-gray-600">Remember me?</label>
             </div>
-            <button className="w-full bg-orange-500 text-white py-2 rounded-md font-semibold hover:bg-orange-600">
+            <button
+              type="submit"
+              className="w-full bg-orange-500 text-white py-2 rounded-md font-semibold hover:bg-orange-600"
+            >
               <SignInButton mode="modal" />
             </button>
           </form>

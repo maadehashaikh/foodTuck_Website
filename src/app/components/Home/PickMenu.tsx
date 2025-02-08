@@ -3,6 +3,26 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { createClient } from "next-sanity";
 
+interface Food {
+  _id: string;
+  name: string;
+  price: number;
+  originalPrice?: number;
+  tags?: string[];
+  imageUrl: string;
+  available: boolean;
+  category: {
+    _id: string;
+    name: string;
+  };
+  description?: string;
+}
+
+interface Category {
+  _id: string;
+  name: string;
+}
+
 const client = createClient({
   projectId: "2sz91eg7",
   dataset: "production",
@@ -10,16 +30,16 @@ const client = createClient({
   useCdn: false,
 });
 
-const PickMenu = () => {
-  const [foods, setFoods] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [activeCategory, setActiveCategory] = useState("Breakfast");
-  const [loading, setLoading] = useState(true);
+const PickMenu: React.FC = () => {
+  const [foods, setFoods] = useState<Food[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [activeCategory, setActiveCategory] = useState<string>("Breakfast");
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const foodData = await client.fetch(`
+        const foodData: Food[] = await client.fetch(`
             *[_type == "food"] [0...8]{
               _id,
               name,
@@ -35,7 +55,7 @@ const PickMenu = () => {
             }
           `);
 
-        const categoryData = await client.fetch(`
+        const categoryData: Category[] = await client.fetch(`
             *[_type == "foodCategory"] {
               _id,
               name
@@ -94,15 +114,15 @@ const PickMenu = () => {
                 </nav>
 
                 <div className="flex flex-wrap justify-center gap-4 mb-12">
-                  {categories.map((category: any) => (
+                  {categories.map((category) => (
                     <button
                       key={category._id}
                       className={`px-4 py-2 rounded-full ${
-                        activeCategory === category
+                        activeCategory === category.name
                           ? "bg-amber-500 text-white"
                           : "text-amber-500 hover:bg-amber-500 hover:text-white"
                       } transition-colors duration-300`}
-                      onClick={() => setActiveCategory(category)}
+                      onClick={() => setActiveCategory(category.name)}
                     >
                       {category.name}
                     </button>
@@ -120,7 +140,7 @@ const PickMenu = () => {
                     />
                   </div>
                   <div className="md:w-[55%] ml-10 grid grid-cols-1 sm:grid-cols-2">
-                    {foods.map((food: any) => (
+                    {foods.map((food) => (
                       <div key={food._id} className="flex items-center gap-2">
                         <Image
                           src={food.imageUrl}
@@ -132,11 +152,7 @@ const PickMenu = () => {
                         <div>
                           <h3 className="font-semibold text-lg">{food.name}</h3>
                           <p className="text-gray-400 text-sm">
-                            {food.description}
-                          </p>
-                          <p className="text-gray-400 text-sm">
-                            Lorem, ipsum dolor sit amet consectetur adipisicing
-                            elit.
+                            {food.description || "No description available."}
                           </p>
                           <p className="text-amber-500 font-bold mt-1">
                             RS : {food.price}

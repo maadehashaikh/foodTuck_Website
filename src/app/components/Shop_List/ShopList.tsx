@@ -3,7 +3,7 @@ import NormalNavBar from "../General/NormalNavBar";
 import PageName from "../General/PageName";
 import ShopListItems from "./ShopListItems";
 
-const ShopList = () => {
+const ShopList: React.FC = () => {
   return (
     <>
       <NormalNavBar />

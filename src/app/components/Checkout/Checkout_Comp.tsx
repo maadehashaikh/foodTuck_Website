@@ -1,27 +1,44 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, ChangeEvent } from "react";
 import { useCart } from "@/app/context/CartContext";
 import { useUser } from "@clerk/nextjs";
 import { client } from "@/sanity/lib/client";
 import { toast } from "react-toastify";
 
-const Checkout_Comp = () => {
-  const { cart, discount } = useCart();
+// Define types for cart items and form state
+interface CartItem {
+  id: string;
+  name: string;
+  price: number;
+  quantity: number;
+  image: string;
+}
+
+interface ShippingDetails {
+  firstname: string;
+  lastname: string;
+  email: string;
+  phone: string;
+  address: string;
+  zipCode: string;
+}
+
+const Checkout_Comp: React.FC = () => {
+  const { cart, discount } = useCart() as { cart: CartItem[]; discount: number };
   const { user } = useUser();
 
-  const totalPrice = cart.reduce(
-    (acc, item) => acc + item.price * item.quantity,
+  const totalPrice: number = cart.reduce(
+    (acc: number, item: CartItem) => acc + item.price * item.quantity,
     0
   );
-  const discountedPrice = Math.round(
+  const discountedPrice: number = Math.round(
     totalPrice - (totalPrice * discount) / 100
   );
-  const shippingCharge = 200;
-  const finalTotal = discountedPrice + shippingCharge;
-  console.log(totalPrice, discountedPrice, shippingCharge, finalTotal, cart);
+  const shippingCharge: number = 200;
+  const finalTotal: number = discountedPrice + shippingCharge;
 
-  const discountPer = `${discount} %`;
-  const [shippingDetails, setShippingDetails] = useState({
+  const discountPer: string = `${discount} %`;
+  const [shippingDetails, setShippingDetails] = useState<ShippingDetails>({
     firstname: "",
     lastname: "",
     email: "",
@@ -30,7 +47,7 @@ const Checkout_Comp = () => {
     zipCode: "",
   });
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setShippingDetails((prev) => ({ ...prev, [name]: value }));
   };
@@ -44,7 +61,7 @@ const Checkout_Comp = () => {
       phone: shippingDetails.phone,
       address: shippingDetails.address,
       zipcode: shippingDetails.zipCode,
-      cartItems: cart.map((item) => ({
+      cartItems: cart.map((item: CartItem) => ({
         _key: crypto.randomUUID(),
         _type: "reference",
         _ref: item.id,
@@ -52,14 +69,14 @@ const Checkout_Comp = () => {
       total: totalPrice,
       totalAfterDiscount: finalTotal,
       discount: discountPer,
-      orderdate: new Date().toISOString,
+      orderdate: new Date().toISOString(),
     };
 
     try {
       await client.create(orderData);
       toast.success("Order placed successfully");
     } catch (error) {
-      console.error("error catched while creating order", error);
+      console.error("Error caught while creating order", error);
       toast.error("Failed to place order. Please try again.");
     }
   };
@@ -135,15 +152,12 @@ const Checkout_Comp = () => {
           </div>
 
           {/* Order Summary */}
-          <div className=" shadow-md rounded-lg p-6 bg-white text-black">
+          <div className="shadow-md rounded-lg p-6 bg-white text-black">
             <h2 className="text-lg font-semibold mb-4">Order Summary</h2>
             <div className="space-y-4">
               {cart.length > 0 ? (
-                cart.map((item) => (
-                  <div
-                    key={item.id}
-                    className="flex items-center justify-start"
-                  >
+                cart.map((item: CartItem) => (
+                  <div key={item.id} className="flex items-center justify-start">
                     <div>
                       <img
                         src={item.image}
@@ -155,7 +169,6 @@ const Checkout_Comp = () => {
                       <p className="text-sm text-gray-500">
                         {item.quantity} x RS: {item.price.toFixed(2)}
                       </p>
-
                       <p className="text-sm font-semibold">
                         RS: {(item.price * item.quantity).toFixed(2)}
                       </p>
@@ -197,7 +210,6 @@ const Checkout_Comp = () => {
           </div>
         </div>
       </div>
-      ;
     </>
   );
 };

@@ -1,10 +1,10 @@
-import React from "react";
+import React, { FC } from "react";
 import Link from "next/link";
 import { FaUser } from "react-icons/fa";
 import { FaCartPlus } from "react-icons/fa";
 import { FaSearch } from "react-icons/fa";
 
-const NormalNavBar = () => {
+const NormalNavBar: FC = () => {
   return (
     <>
       <header className="bg-black shadow-md py-4">

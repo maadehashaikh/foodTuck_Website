@@ -1,7 +1,7 @@
 import React from "react";
 import Menu from "../components/Menu/Menu";
 
-const page = () => {
+const page: React.FC = () => {
   return (
     <>
       <Menu />

@@ -5,6 +5,28 @@ import Image from "next/image";
 import imageUrlBuilder from "@sanity/image-url";
 import Link from "next/link";
 
+interface FoodItem {
+  _id: string;
+  name: string;
+  category: string;
+  price: number;
+  originalPrice: number;
+  tags?: string[];
+  image: {
+    asset: {
+      _ref: string;
+      _type: string;
+    };
+  };
+  description?: string;
+  available: boolean;
+}
+
+interface RecommendationProps {
+  category: string;
+  name: string;
+}
+
 const client = createClient({
   projectId: "2sz91eg7",
   dataset: "production",
@@ -13,17 +35,16 @@ const client = createClient({
 });
 
 const builder = imageUrlBuilder(client);
-export const urlFor = (source) => builder.image(source);
+export const urlFor = (source: any) => builder.image(source);
 
-const Recommendation = ({ category, name }) => {
-  console.log(`${category} ${name}`);
-  const [fooddata, setFooddata] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+const Recommendation: React.FC<RecommendationProps> = ({ category, name }) => {
+  const [fooddata, setFooddata] = useState<FoodItem[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchFoodItems = async () => {
       try {
-        const FoodData = await client.fetch(
+        const FoodData: FoodItem[] = await client.fetch(
           `*[_type == "food" && category == $category]{
             _id,
             name,
@@ -38,10 +59,10 @@ const Recommendation = ({ category, name }) => {
           { category }
         );
 
-        // ✅ Exclude the current item
+        // Exclude the current item
         const filteredItems = FoodData.filter((item) => item.name !== name);
 
-        // ✅ Select up to 4 random items
+        // Select up to 4 random items
         const shuffled = filteredItems.sort(() => 0.5 - Math.random());
         const selectedItems = shuffled.slice(0, 4);
 

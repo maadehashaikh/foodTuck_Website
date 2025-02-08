@@ -1,11 +1,21 @@
 "use client";
+import React from "react";
 import Image from "next/image";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
 
-const testimonials = [
+interface Testimonial {
+  id: number;
+  name: string;
+  role: string;
+  image: string;
+  quote: string;
+  rating: number;
+}
+
+const testimonials: Testimonial[] = [
   {
     id: 1,
     name: "Alamin Hasan",
@@ -21,7 +31,7 @@ const testimonials = [
     role: "Nutrition Expert",
     image: "/Feedback 2.jpg",
     quote:
-      "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.Duis aute irure, Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.  ",
+      "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.Duis aute irure, Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
     rating: 5,
   },
   {
@@ -30,7 +40,7 @@ const testimonials = [
     role: "Chef",
     image: "/Feedback 3.jpg",
     quote:
-      "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit . ",
+      "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit.",
     rating: 3,
   },
   {
@@ -39,7 +49,7 @@ const testimonials = [
     role: "Food Blogger",
     image: "/Feedback 4.jpg",
     quote:
-      "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur",
+      "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
     rating: 4,
   },
   {
@@ -48,12 +58,12 @@ const testimonials = [
     role: "Restaurant Owner",
     image: "/Feedback 5.jpg",
     quote:
-      "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla ",
+      "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
     rating: 5,
   },
 ];
 
-const Client_Feedback = () => {
+const Client_Feedback: React.FC = () => {
   return (
     <section className="bg-black text-white relative overflow-hidden">
       <div className="container mx-auto px-4">
@@ -70,26 +80,26 @@ const Client_Feedback = () => {
           modules={[Pagination]}
           className="mySwiper bg-white w-[60%] rounded-lg"
         >
-          {testimonials.map((testimonial) => (
-            <SwiperSlide key={testimonial.id}>
+          {testimonials.map((testimonial: Testimonial) => (
+            <SwiperSlide key={testimonial?.id}>
               <div className="flex flex-col gap-3 items-center justify-between mx-auto mt-4 bg-white text-black lg:w-[80%] ">
                 <Image
-                  src={testimonial.image}
-                  alt=""
+                  src={testimonial?.image}
+                  alt={`${testimonial?.name} Feedback`}
                   width={80}
                   height={30}
                   className="rounded-full border-4 border-white bg-teal-300 m-auto mt-2"
                 />
 
                 <p className="text-gray-600 mb-6 mt-4 text-sm">
-                  {testimonial.quote}
+                  {testimonial?.quote}
                 </p>
                 <div className="flex justify-center mb-1">
                   {[...Array(5)].map((_, i) => (
                     <svg
                       key={i}
                       className={`w-6 h-6 ${
-                        i < testimonial.rating
+                        i < testimonial?.rating
                           ? "text-amber-500"
                           : "text-gray-300"
                       }`}
@@ -100,8 +110,8 @@ const Client_Feedback = () => {
                     </svg>
                   ))}
                 </div>
-                <h4 className="font-bold text-xl">{testimonial.name}</h4>
-                <p className="text-gray-500 mb-3">{testimonial.role}</p>
+                <h4 className="font-bold text-xl">{testimonial?.name}</h4>
+                <p className="text-gray-500 mb-3">{testimonial?.role}</p>
               </div>
             </SwiperSlide>
           ))}

@@ -2,13 +2,14 @@ import React from "react";
 import Image from "next/image";
 import { PiHamburgerFill } from "react-icons/pi";
 import { FaPizzaSlice, FaWineGlass } from "react-icons/fa";
-const Why_Us = () => {
+
+const Why_Us: React.FC = () => {
   return (
     <>
       <section className="bg-black text-white pt-16 h-[120vh] px-6 md:px-12">
         {/* Food Category */}
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2">
-          {/* Left  Section */}
+          {/* Left Section */}
           <div className="grid grid-cols-2 grid-rows-3 gap-4">
             <Image
               src="/tacos.png"
@@ -47,12 +48,13 @@ const Why_Us = () => {
             />
             <Image
               src="/brocliSalid.png"
-              alt="Brocli Salid"
+              alt="Brocli Salad"
               width={141}
               height={135}
               className="rounded-lg object-cover -mt-[445px] ml-[490px] bg-fuchsia-400"
             />
           </div>
+
           {/* Right Text Content */}
           <div className="h-auto text-center lg:text-left lg:ml-28 md:ml-[800px]">
             <p className="text-amber-500 italic text-2xl mb-2">Why Choose us</p>
@@ -60,32 +62,30 @@ const Why_Us = () => {
               <span className="text-amber-500">Ex</span>tra ordinary taste And
               Experienced
             </h2>
-            <p className="text-gray-300  text-md mb-6">
+            <p className="text-gray-300 text-md mb-6">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque
               diam pellentesque bibendum non dui volutpat fringilla bibendum.
               Urna, elit augue urna, vitae feugiat pretium donec id elementum.
               Urna, elit augue urna, vitae feugiat pretium donec id elementum.
             </p>
+
             {/* Service Categories */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-6 ">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-6">
               <div className="flex flex-col items-center">
                 <div className="w-24 h-24 bg-amber-500 text-white flex items-center justify-center rounded-lg">
                   <PiHamburgerFill className="w-14 h-14" />
-                  <i className="PiHamburgerFill text-2xl"></i>
                 </div>
                 <p className="mt-2 text-gray-300">Fast Food</p>
               </div>
               <div className="flex flex-col items-center">
                 <div className="w-24 h-24 bg-amber-500 text-white flex items-center justify-center rounded-lg">
                   <FaPizzaSlice className="w-14 h-14" />
-                  <i className="FaPizzaSlice text-2xl"></i>
                 </div>
                 <p className="mt-2 text-gray-300">Lunch</p>
               </div>
               <div className="flex flex-col items-center">
                 <div className="w-24 h-24 bg-amber-500 text-white flex items-center justify-center rounded-lg">
                   <FaWineGlass className="w-14 h-14" />
-                  <i className="FaWineGlass text-2xl"></i>
                 </div>
                 <p className="mt-2 text-gray-300">Dinner</p>
               </div>

@@ -7,6 +7,15 @@ import { createClient } from "next-sanity";
 import MenuLeft from "./MenuLeft";
 import Status from "../Home/Satus";
 
+interface MenuItem {
+  _id: string;
+  name: string;
+  description: string;
+  price: number;
+  category: string;
+  tags: string[];
+}
+
 const client = createClient({
   projectId: "2sz91eg7",
   dataset: "production",
@@ -14,9 +23,9 @@ const client = createClient({
   useCdn: false,
 });
 
-const Menu = () => {
-  const [menudata, setMenudata] = useState([]);
-  const [loading, setLoading] = useState(true);
+const Menu: React.FC = () => {
+  const [menudata, setMenudata] = useState<MenuItem[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchMenu = async () => {
@@ -30,7 +39,7 @@ const Menu = () => {
             category, 
             tags
           }`;
-        const data = await client.fetch(query);
+        const data: MenuItem[] = await client.fetch(query);
         setMenudata(data);
       } catch (error) {
         console.error("Error fetching menu:", error);

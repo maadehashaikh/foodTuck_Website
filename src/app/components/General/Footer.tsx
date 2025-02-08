@@ -1,13 +1,22 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, FC } from "react";
 import { createClient } from "next-sanity";
-import { FaFacebook } from "react-icons/fa";
-import { FaTwitter } from "react-icons/fa";
-import { FaInstagram } from "react-icons/fa";
-import { FaYoutube } from "react-icons/fa";
-import { FaPinterest } from "react-icons/fa";
+import { FaFacebook, FaTwitter, FaInstagram, FaYoutube, FaPinterest } from "react-icons/fa";
 import { IoMdTime } from "react-icons/io";
 import Image from "next/image";
+
+interface BlogData {
+  _id: string;
+  title: string;
+  description?: string;
+  author?: string;
+  date: string;
+  image: {
+    asset: {
+      url: string;
+    };
+  };
+}
 
 const client = createClient({
   projectId: "2sz91eg7",
@@ -16,27 +25,27 @@ const client = createClient({
   useCdn: false,
 });
 
-const Footer = () => {
-  const [blogdata, setBlogdata] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+const Footer: FC = () => {
+  const [blogdata, setBlogdata] = useState<BlogData[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        const BlogData = await client.fetch(`
-            *[_type == "blog"] | order(date desc) [0...3] {
-    _id,
-    title,
-    description,
-    author,
-    date,
-    image {
-      asset->{
-        url
-      }
-    }
-  }
-  `);
+        const BlogData: BlogData[] = await client.fetch(`
+          *[_type == "blog"] | order(date desc) [0...3] {
+            _id,
+            title,
+            description,
+            author,
+            date,
+            image {
+              asset->{
+                url
+              }
+            }
+          }
+        `);
 
         setBlogdata(BlogData);
       } catch (error) {
@@ -47,6 +56,7 @@ const Footer = () => {
     };
     fetchBlogs();
   }, []);
+
   return (
     <>
       <footer className="bg-black text-gray-300 pt-12">
@@ -54,8 +64,7 @@ const Footer = () => {
           {/* Top Newsletter Section */}
           <div className="text-center mb-10">
             <h2 className="text-2xl font-bold mb-2 text-white">
-              <span className="text-amber-500">Still</span> You Need Our
-              Support?
+              <span className="text-amber-500">Still</span> You Need Our Support?
             </h2>
             <p className="text-gray-400 mb-4">
               Dont wait! Make a smart & logical quote here. Its pretty easy.
@@ -107,7 +116,7 @@ const Footer = () => {
               <h3 className="text-white font-semibold mb-3">Useful Links</h3>
               <ul className="space-y-1">
                 {["About", "News", "Partners", "Team", "Menu", "Contacts"].map(
-                  (link) => (
+                  (link: string) => (
                     <li key={link}>
                       <a href="#" className="hover:text-orange-500 py-4">
                         {link}
@@ -129,7 +138,7 @@ const Footer = () => {
                   "Documentation",
                   "Support Policy",
                   "Privacy",
-                ].map((item) => (
+                ].map((item: string) => (
                   <li key={item}>
                     <a href="#" className="hover:text-amber-500">
                       {item}
@@ -150,10 +159,10 @@ const Footer = () => {
               ) : (
                 <div className="">
                   {blogdata.length > 0 ? (
-                    blogdata.map((post) => (
+                    blogdata.map((post: BlogData) => (
                       <div
                         key={post._id}
-                        className=" rounded-lg overflow-hidden  w-[300px] flex items-center justify-between mb-2"
+                        className="rounded-lg overflow-hidden w-[300px] flex items-center justify-between mb-2"
                       >
                         <div className="w-[20%] bg-slate-300">
                           <Image
@@ -173,7 +182,7 @@ const Footer = () => {
                               day: "numeric",
                             })}
                           </p>
-                          <h4 className="text-sm  text-white">{post.title}</h4>
+                          <h4 className="text-sm text-white">{post.title}</h4>
                         </div>
                       </div>
                     ))
@@ -191,7 +200,7 @@ const Footer = () => {
         {/* Footer Bottom */}
         <div className="mt-8 flex flex-col md:flex-row justify-evenly items-start text-white text-sm bg-gray-500 w-full pt-2">
           <p className="text-center md:text-left mb-0">
-            Copyright &copy; 2022 by Maadeha Shaikh . All Rights Reserved.
+            Copyright &copy; 2022 by Maadeha Shaikh. All Rights Reserved.
           </p>
           <div className="flex items-center justify-between gap-5">
             <FaFacebook />
