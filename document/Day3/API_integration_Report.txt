@@ -1,0 +1,24 @@
+API INTEGRATION REPORT [FOODTUCK]
+
+API integration process ?
+In this project, the API integration will done using Next.js along with the Sanity CMS. The createClient function from the next-sanity library will used 
+to establish a connection with the Sanity project by providing the project ID, dataset, and API version. An asynchronous function will defined 
+inside the useEffect hook to fetch data from the Sanity CMS, specifically retrieving a list of products , chefs that are marked as available and excluding 
+certain chefs. The data fetched will includes details like the chef's name, position, and image URL and food's name, image, price, a small description and 
+availibility true or false .Once the data is retrieved, it is stored in the state using usestate and a loading state is used to show a loading message 
+until the data is fully fetched. The fetched data is then displayed dynamically in the UI using React components.
+
+Adjustments made to schemas ? 
+Yes as I have got ready made schemas of food and chefs then it will be more easy to just craete the order's detail schema and I will work on it as checkout
+will take all the user's info and then store it to schema of orders 
+
+
+Migration steps and tools used ? 
+Set Up Sanity.io: Create an account and set up a project to manage content like chef's details.
+Install Sanity Client: Add the next-sanity package in your Next.js project to fetch data from Sanity.
+Create Query: Write a query to fetch chefs’ data (name, position, image) from Sanity.
+Fetch Data: Use the Sanity client in your component to fetch and store the data.
+Display Data: Show the chefs’ info in a card layout with their image and details.
+Error Handling: Display a loading message and handle errors during data fetch.
+Link to More Info: Add a button to navigate to a page with more chef details.
+

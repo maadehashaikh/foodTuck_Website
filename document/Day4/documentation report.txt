@@ -1,0 +1,87 @@
+DOCUMENTATION OF BUILDING DYNAMIC FRONTEND COMPONENTS FOR MARKETPLACE : 
+
+
+STEPS TAKEN TO BUILD AND INTEGRATE COMPONENTS : 
+----------------------------------------------
+1. Setting Up the Project
+Initialized a Next.js project using:
+Installed necessary dependencies like Tailwind CSS for styling and Sanity for the CMS.
+2. Setting Up Sanity as a Headless CMS
+Created a Sanity project using:
+Defined schemas for order, blog and used food schema and chef schema as it's given by the faculty
+3. Fetching Data from Sanity in Next.js
+Test queries in sanity studio first.
+And then used Sanity’s GROQ queries to fetch products and categories dynamically.
+4. Building Reusable UI Components
+Created reusable components like:
+Navbar – for navigation only for home or main or page.
+NormalNavbar - for navigation across all pages.
+Hero Section – for promotional banners and attract clients.
+Products Card - for displying products data.
+Product Detail – to display product details.
+Recommendation - Component to display recommended products.
+Category Filters – to filter menu items dynamically.
+Cart & Coupon – for cart detail and coupon application.
+Checkout - for taking user's deatils and confirmation of products and store them into orders in sanity studio.
+5. Implementing State Management
+Used React Context API to manage the shopping cart globally.
+Optimized client-side state for a smooth user experience.
+6. Adding Routing with Next.js
+Used Next.js dynamic routes to create individual product pages:
+app/food/[id].tsx
+Implemented server-side rendering (SSR) for better SEO and performance.
+
+
+STEPS TAKEN TO BUILD AND INTEGRATE COMPONENTS : 
+-----------------------------------------------
+Challenges Faced and Solutions Implemented
+During the development of my eCommerce restaurant website using Next.js and Sanity, I encountered several challenges. However, by debugging, reading 
+documentation, and learning from mistakes, I was able to resolve them. Here are some key challenges I faced and how I overcame them:
+1. Storing User Information in the Checkout Page
+Challenge: While trying to store all user information through the checkout page, I faced an issue because I forgot to import fetch in the main file of the 
+Sanity schema. This caused errors when trying to send or retrieve data.
+Solution: After debugging and carefully reviewing my Sanity schema, I realized the missing import. Once I added import fetch from 'node-fetch';, the issue 
+was resolved, and user data was successfully stored.
+2. Implementing Dynamic Routes in Next.js
+Challenge: While setting up dynamic routes in Next.js, I struggled for two days because my ID was showing in the URL, but the route wasn’t rendering 
+correctly. Later, I discovered that I had mistakenly placed the dynamic route inside the wrong folder instead of the app folder.
+Solution: After carefully reviewing Next.js folder structure and debugging the issue, I moved my dynamic route inside the correct app directory. This fixed 
+the issue, and my dynamic pages started working correctly.
+3. Learning and Working with GROQ Queries
+Challenge: Since I was new to GROQ queries, it was difficult for me to fetch data properly from Sanity. Unlike traditional SQL or REST API queries, GROQ has
+a different syntax, which made it challenging to retrieve data efficiently.
+Solution: I overcame this challenge by reading the official Sanity documentation and practicing different query structures. Over time, I understood how to 
+filter, sort, and fetch the required data correctly.
+4. Implementing Coupon Functionality
+Challenge: Adding a coupon discount system was quite challenging as I encountered multiple errors in validating and applying discounts correctly. Ensuring 
+that the coupon was applied only once per user and handling edge cases was tricky.
+Solution: By breaking down the problem step by step, debugging my logic, and testing different scenarios, I was able to implement a working coupon system.
+Slowly and gradually, I fixed the errors and ensured smooth functionality.
+Conclusion
+These challenges helped me gain better debugging skills, problem-solving techniques, and a deeper understanding of Next.js and Sanity. Overcoming these 
+obstacles made my project more efficient, structured, and functional.
+
+BEST PRACTICES FOLLOWED IN MY PROJECT :
+-------------------------------------------------
+While developing my eCommerce restaurant website using Next.js and Sanity, I ensured that I followed industry best practices to make the project scalable, 
+maintainable, and efficient. Here are the key best practices I followed:
+1. Clean and Modular Code Structure
+Organized components into separate folders like components/, pages/, and utils/ for better maintainability.
+Used reusable components for UI elements like buttons, cards, and modals to avoid code duplication.
+2. Efficient State Management
+Used React Context API to manage global states like cart data and user authentication.
+Avoided unnecessary re-renders by memoizing values using useCallback().
+3. Secure and Optimized API Handling
+Used Next.js API routes (app/api/) to handle backend logic securely.
+Implemented proper error handling with try-catch blocks to prevent crashes.
+4. Proper Folder and Routing Structure
+Followed Next.js App Router structure, ensuring all dynamic routes were placed in the correct directories.
+Used SEO-friendly dynamic routing, such as /food/[index].tsx, to enhance search engine visibility.
+5. Best Practices for Sanity Integration
+Used GROQ queries efficiently to fetch only necessary fields, reducing API load.
+Implemented CORS restrictions properly to prevent unauthorized access.
+6. Responsive and Accessible Design
+Used Tailwind CSS for a fully responsive UI.
+
+
+
