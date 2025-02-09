@@ -66,7 +66,7 @@ const Latest_Blogs = () => {
         ) : (
           <div className="flex items-center justify-evenly gap-0">
             {blogdata.length > 0 ? (
-              blogdata.map((post) => (
+              blogdata.map((post: any) => (
                 <div
                   key={post._id}
                   className="bg-black rounded-lg overflow-hidden border-2 border-white w-80 h-[350px]"
