@@ -28,11 +28,11 @@ const client = createClient({
 const builder = imageUrlBuilder(client);
 export const urlFor = (source: any) => builder.image(source);
 
-const ShopListItems: React.FC = () => {
+const ShopListItems = () => {
   const [fooddata, setFooddata] = useState<FoodItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [products, setProducts] = useState<FoodItem[]>([]);
-  const [setAllTags] = useState<string[]>([]);
+  const [allTags, setAllTags] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [filteredFood, setFilteredFood] = useState<FoodItem[]>([]);
   const [category, setCategory] = useState<string[]>([]);

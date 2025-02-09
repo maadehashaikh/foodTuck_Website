@@ -23,7 +23,7 @@ const client = createClient({
   useCdn: false,
 });
 
-const Menu: React.FC = () => {
+const Menu = () => {
   const [menudata, setMenudata] = useState<MenuItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 

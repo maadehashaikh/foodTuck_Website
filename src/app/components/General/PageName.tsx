@@ -1,7 +1,7 @@
 import React from "react";
 import { TbMathGreater } from "react-icons/tb";
 
-const PageName: React.FC = ({ pageName, title }) => {
+const PageName = ({ pageName, title }) => {
   return (
     <>
       <div

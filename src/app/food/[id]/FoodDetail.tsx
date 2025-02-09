@@ -9,7 +9,14 @@ import { useCart } from "@/app/context/CartContext";
 import Link from "next/link";
 import { IoFastFoodOutline } from "react-icons/io5";
 import { LiaHashtagSolid } from "react-icons/lia";
-import { FaSquareYoutube, FaInstagramSquare, FaFacebook, FaTwitterSquare, FaShareSquare } from "react-icons/fa";
+import {
+  FaInstagramSquare,
+  FaFacebook,
+  FaTwitterSquare,
+  FaShareSquare,
+} from "react-icons/fa";
+import { FaSquareYoutube } from "react-icons/fa6";
+
 import Recommendation from "@/app/components/ShopDetails/Recommendation";
 
 const client = createClient({
