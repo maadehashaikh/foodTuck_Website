@@ -35,7 +35,16 @@ const client = createClient({
 });
 
 const builder = imageUrlBuilder(client);
-export const urlFor = (source: any) => builder.image(source);
+
+// Define a type for the image source
+type ImageSource = {
+  asset: {
+    _ref: string;
+    _type: string;
+  };
+};
+
+export const urlFor = (source: ImageSource) => builder.image(source);
 
 const Recommendation: React.FC<RecommendationProps> = ({ category, name }) => {
   const [fooddata, setFooddata] = useState<FoodItem[]>([]);
@@ -95,7 +104,7 @@ const Recommendation: React.FC<RecommendationProps> = ({ category, name }) => {
                   <Link href={`/food/${foodItem._id}`} key={foodItem._id}>
                     <div className="rounded-lg overflow-hidden w-auto h-auto text-black border-2 border-gray-200 flex flex-col items-center p-2">
                       <Image
-                        src={urlFor(foodItem.image.asset).url()}
+                        src={urlFor(foodItem.image).url()}
                         alt={foodItem.name}
                         width={200}
                         height={250}

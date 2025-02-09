@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { createClient } from "next-sanity";
 import Image from "next/image";
-import imageUrlBuilder from "@sanity/image-url";
+import imageUrlBuilder, { ImageUrlBuilder } from "@sanity/image-url";
 import { FaCartArrowDown } from "react-icons/fa6";
 import { useCart } from "@/app/context/CartContext";
 import Link from "next/link";
@@ -15,7 +15,7 @@ import {
   FaTwitterSquare,
   FaShareSquare,
 } from "react-icons/fa";
-import { FaSquareYoutube } from "react-icons/fa6";
+import { FaYoutubeSquare } from "react-icons/fa";
 
 import Recommendation from "@/app/components/ShopDetails/Recommendation";
 
@@ -27,7 +27,9 @@ const client = createClient({
 });
 
 const builder = imageUrlBuilder(client);
-export const urlFor = (source: any) => builder.image(source);
+
+export const urlFor = (source: { asset: { _ref: string } }) =>
+  builder.image(source);
 
 interface FoodItem {
   _id: string;
@@ -89,7 +91,7 @@ const FoodDetail: React.FC = () => {
         <div className="flex flex-col sm:flex-col md:flex-row items-center justify-center gap-2">
           <div className="w-full md:w-1/2 flex justify-center">
             <Image
-              src={urlFor(foodItem.image.asset).url()}
+              src={urlFor(foodItem.image).url()}
               alt={foodItem.name}
               width={300}
               height={200}
@@ -136,7 +138,7 @@ const FoodDetail: React.FC = () => {
                       id: foodItem._id,
                       name: foodItem.name,
                       price: foodItem.price,
-                      image: urlFor(foodItem.image.asset).url(),
+                      image: urlFor(foodItem.image).url(),
                       quantity: quantity,
                     })
                   }
@@ -164,7 +166,7 @@ const FoodDetail: React.FC = () => {
                 Share:
               </h2>
               <div className="flex flex-row items-center justify-around ml-2">
-                <FaSquareYoutube />
+                <FaYoutubeSquare />
                 <FaInstagramSquare />
                 <FaFacebook />
                 <FaTwitterSquare />

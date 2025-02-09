@@ -1,7 +1,6 @@
 "use client";
 import React, { useState, ChangeEvent } from "react";
 import { useCart } from "@/app/context/CartContext";
-import { useUser } from "@clerk/nextjs";
 import { client } from "@/sanity/lib/client";
 import { toast } from "react-toastify";
 
@@ -25,7 +24,6 @@ interface ShippingDetails {
 
 const Checkout_Comp: React.FC = () => {
   const { cart, discount } = useCart() as { cart: CartItem[]; discount: number };
-  const { user } = useUser();
 
   const totalPrice: number = cart.reduce(
     (acc: number, item: CartItem) => acc + item.price * item.quantity,
@@ -75,8 +73,12 @@ const Checkout_Comp: React.FC = () => {
     try {
       await client.create(orderData);
       toast.success("Order placed successfully");
-    } catch (error) {
-      console.error("Error caught while creating order", error);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error("Error caught while creating order", error.message);
+      } else {
+        console.error("An unexpected error occurred", error);
+      }
       toast.error("Failed to place order. Please try again.");
     }
   };

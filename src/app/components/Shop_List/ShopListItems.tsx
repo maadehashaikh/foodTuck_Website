@@ -4,7 +4,11 @@ import { createClient } from "next-sanity";
 import Image from "next/image";
 import imageUrlBuilder from "@sanity/image-url";
 import Link from "next/link";
-import { FaSearch, FaRegArrowAltCircleRight } from "react-icons/fa";
+import { FaSearch } from "react-icons/fa";
+
+interface ImageSource {
+  asset: { url: string };
+}
 
 interface FoodItem {
   _id: string;
@@ -12,7 +16,7 @@ interface FoodItem {
   category: string;
   price: number;
   originalPrice?: number;
-  image: { asset: { url: string } };
+  image: ImageSource;
   description?: string;
   available?: boolean;
   tags?: string[];
@@ -26,18 +30,16 @@ const client = createClient({
 });
 
 const builder = imageUrlBuilder(client);
-export const urlFor = (source: any) => builder.image(source);
+export const urlFor = (source: ImageSource) => builder.image(source);
 
 const ShopListItems = () => {
   const [fooddata, setFooddata] = useState<FoodItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [products, setProducts] = useState<FoodItem[]>([]);
-  const [allTags, setAllTags] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [filteredFood, setFilteredFood] = useState<FoodItem[]>([]);
   const [category, setCategory] = useState<string[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [minPrice] = useState<number>(0);
   const [maxPrice, setMaxPrice] = useState<number>(3000);
 
   useEffect(() => {
@@ -63,14 +65,11 @@ const ShopListItems = () => {
             _id, name, category, price, originalPrice, tags, image, description, available
           }
         `);
-        const tagsArray = FoodData.flatMap((item) => item.tags || []);
-        const uniqueTags: string[] = [...new Set(tagsArray)];
         const uniqueCategories: string[] = [
           ...new Set(FoodData.map((item) => item.category)),
         ];
         setCategory(uniqueCategories);
 
-        setAllTags(uniqueTags);
         setFooddata(FoodData);
         setFilteredFood(FoodData);
       } catch (error) {
@@ -95,14 +94,10 @@ const ShopListItems = () => {
       filtered = filtered.filter((food) => food.category === selectedCategory);
     }
 
-    if (minPrice !== null && maxPrice !== null) {
-      filtered = filtered.filter(
-        (food) => food.price >= minPrice && food.price <= maxPrice
-      );
-    }
+    filtered = filtered.filter((food) => food.price <= maxPrice);
 
     setFilteredFood(filtered);
-  }, [searchQuery, selectedCategory, minPrice, maxPrice, fooddata]);
+  }, [searchQuery, selectedCategory, maxPrice, fooddata]);
 
   return (
     <>
@@ -120,7 +115,7 @@ const ShopListItems = () => {
                   <Link href={`/food/${foodItem._id}`} key={foodItem._id}>
                     <div className="rounded-lg overflow-hidden w-full h-auto text-black border-2 border-red-100">
                       <Image
-                        src={urlFor(foodItem.image.asset).url()}
+                        src={urlFor(foodItem.image).url()}
                         alt={foodItem.name}
                         width={200}
                         height={250}
@@ -152,7 +147,6 @@ const ShopListItems = () => {
         </div>
 
         <div className="py-2 w-full md:w-[25%] border-2 border-gray-200 px-5 rounded-md">
-          {/* Search Bar */}
           <div className="relative mb-4">
             <input
               type="text"
@@ -165,11 +159,10 @@ const ShopListItems = () => {
               <FaSearch />
             </button>
           </div>
-          {/* Category Section */}
           <div className="mb-4 text-black">
             <h2 className="font-semibold mb-2">Category</h2>
-            {category.map((onecategory, index) => (
-              <div key={index} className="flex items-center mb-1">
+            {category.map((onecategory) => (
+              <div key={onecategory} className="flex items-center mb-1">
                 <input
                   type="checkbox"
                   id={onecategory}
@@ -189,7 +182,6 @@ const ShopListItems = () => {
               Clear Filter
             </button>
           </div>
-          {/* Price Filter */}
           <div className="mb-4 text-black">
             <h2 className="font-semibold mb-2">Filter By Price</h2>
 
@@ -213,14 +205,13 @@ const ShopListItems = () => {
             </div>
           </div>
 
-          {/* Latest Products */}
           <div className="mb-4 text-black">
             <h2 className="font-semibold mb-2">Latest Products</h2>
             {products.length > 0 ? (
               products.map((product: FoodItem) => (
                 <div key={product._id} className="flex items-center mb-2">
                   <Image
-                    src={urlFor(product.image.asset).url()}
+                    src={urlFor(product.image).url()}
                     alt={product.name}
                     width={64}
                     height={48}

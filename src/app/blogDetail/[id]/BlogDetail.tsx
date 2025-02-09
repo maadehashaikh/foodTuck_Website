@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { createClient } from "next-sanity";
 import Image from "next/image";
-import imageUrlBuilder from "@sanity/image-url";
+import imageUrlBuilder , { ImageUrlBuilder } from "@sanity/image-url";
 import { IoCalendarNumber } from "react-icons/io5";
 import { FaMessage } from "react-icons/fa6";
 import { FaUserCheck } from "react-icons/fa";
@@ -27,8 +27,10 @@ const client = createClient({
   useCdn: false,
 });
 
-const builder = imageUrlBuilder(client);
-export const urlFor = (source: any) => builder.image(source);
+const builder: ImageUrlBuilder = imageUrlBuilder(client);
+export const urlFor = (source: BlogItemType['image']['asset']) => {
+  return builder.image(source);
+};
 
 const BlogDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
