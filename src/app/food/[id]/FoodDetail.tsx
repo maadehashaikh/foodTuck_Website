@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { createClient } from "next-sanity";
 import Image from "next/image";
-import imageUrlBuilder, { ImageUrlBuilder } from "@sanity/image-url";
+import imageUrlBuilder from "@sanity/image-url";
 import { FaCartArrowDown } from "react-icons/fa6";
 import { useCart } from "@/app/context/CartContext";
 import Link from "next/link";
