@@ -1,7 +1,8 @@
+import React from "react";
 import LandingPage from "./components/Home/LandingPage";
 import Navbar from "./components/General/Navbar";
 
-export default function Home() {
+const Home: React.FC = () => {
   return (
     <>
       <Navbar />
@@ -9,3 +10,5 @@ export default function Home() {
     </>
   );
 }
+export default Home;
+

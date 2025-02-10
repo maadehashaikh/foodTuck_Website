@@ -5,7 +5,22 @@ import Image from "next/image";
 import imageUrlBuilder from "@sanity/image-url";
 import Link from "next/link";
 import { FaSearch } from "react-icons/fa";
-import { FaRegArrowAltCircleRight } from "react-icons/fa";
+
+interface ImageSource {
+  asset: { url: string };
+}
+
+interface FoodItem {
+  _id: string;
+  name: string;
+  category: string;
+  price: number;
+  originalPrice?: number;
+  image: ImageSource;
+  description?: string;
+  available?: boolean;
+  tags?: string[];
+}
 
 const client = createClient({
   projectId: "2sz91eg7",
@@ -15,29 +30,27 @@ const client = createClient({
 });
 
 const builder = imageUrlBuilder(client);
-export const urlFor = (source) => builder.image(source);
+export const urlFor = (source: ImageSource) => builder.image(source);
 
 const ShopListItems = () => {
-  const [fooddata, setFooddata] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [products, setProducts] = useState([]);
-  const [allTags, setAllTags] = useState([]);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [filteredFood, setFilteredFood] = useState<any[]>([]);
+  const [fooddata, setFooddata] = useState<FoodItem[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [products, setProducts] = useState<FoodItem[]>([]);
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [filteredFood, setFilteredFood] = useState<FoodItem[]>([]);
   const [category, setCategory] = useState<string[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState(null);
-  const [minPrice, setMinPrice] = useState(0);
-  const [maxPrice, setMaxPrice] = useState(3000);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [maxPrice, setMaxPrice] = useState<number>(3000);
 
   useEffect(() => {
     const latestProducts = async () => {
-      const data = await client.fetch(`
-          *[_type == "food"] | order(_createdAt desc)[0...4] {
-            _id, name, category, price,image
-          }
-        `);
-      const uniqueProducts: any = Array.from(
-        new Map(data.map((item: any) => [item.name, item])).values()
+      const data: FoodItem[] = await client.fetch(`
+        *[_type == "food"] | order(_createdAt desc)[0...4] {
+          _id, name, category, price, image
+        }
+      `);
+      const uniqueProducts: FoodItem[] = Array.from(
+        new Map(data.map((item) => [item.name, item])).values()
       );
       setProducts(uniqueProducts);
     };
@@ -47,19 +60,16 @@ const ShopListItems = () => {
   useEffect(() => {
     const fetchFood = async () => {
       try {
-        const FoodData = await client.fetch(`
-        *[_type == "food"]{
-          _id, name, category, price, originalPrice, tags, image, description, available,
-        }
-      `);
-        const tagsArray = FoodData.map((item) => item.tags).flat();
-        const uniqueTags: any = [...new Set(tagsArray)];
-        const uniqueCategories: any = [
+        const FoodData: FoodItem[] = await client.fetch(`
+          *[_type == "food"]{
+            _id, name, category, price, originalPrice, tags, image, description, available
+          }
+        `);
+        const uniqueCategories: string[] = [
           ...new Set(FoodData.map((item) => item.category)),
         ];
         setCategory(uniqueCategories);
 
-        setAllTags(uniqueTags);
         setFooddata(FoodData);
         setFilteredFood(FoodData);
       } catch (error) {
@@ -84,14 +94,10 @@ const ShopListItems = () => {
       filtered = filtered.filter((food) => food.category === selectedCategory);
     }
 
-    if (minPrice !== null && maxPrice !== null) {
-      filtered = filtered.filter(
-        (food) => food.price >= minPrice && food.price <= maxPrice
-      );
-    }
+    filtered = filtered.filter((food) => food.price <= maxPrice);
 
     setFilteredFood(filtered);
-  }, [searchQuery, selectedCategory, minPrice, maxPrice, fooddata]);
+  }, [searchQuery, selectedCategory, maxPrice, fooddata]);
 
   return (
     <>
@@ -105,11 +111,11 @@ const ShopListItems = () => {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
               {filteredFood.length > 0 ? (
-                filteredFood.map((foodItem) => (
+                filteredFood.map((foodItem: FoodItem) => (
                   <Link href={`/food/${foodItem._id}`} key={foodItem._id}>
                     <div className="rounded-lg overflow-hidden w-full h-auto text-black border-2 border-red-100">
                       <Image
-                        src={urlFor(foodItem.image.asset).url()}
+                        src={urlFor(foodItem.image).url()}
                         alt={foodItem.name}
                         width={200}
                         height={250}
@@ -119,14 +125,13 @@ const ShopListItems = () => {
                         <p className="text-Black text-sm mb-2">
                           {foodItem.name}
                         </p>
-                        <h4 className="text-2xl font-bold mb-4">
-                          {foodItem.title}
-                        </h4>
                         <div className="text-amber-500 flex gap-3 text-xs">
                           <span>RS {foodItem.price}</span>
-                          <span className="text-gray-500 text-xs line-through">
-                            RS {foodItem.originalPrice}
-                          </span>
+                          {foodItem.originalPrice && (
+                            <span className="text-gray-500 text-xs line-through">
+                              RS {foodItem.originalPrice}
+                            </span>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -141,8 +146,7 @@ const ShopListItems = () => {
           )}
         </div>
 
-        <div className=" py-2 w-full md:w-[25%] border-2 border-gray-200 px-5 rounded-md">
-          {/* Search Bar */}
+        <div className="py-2 w-full md:w-[25%] border-2 border-gray-200 px-5 rounded-md">
           <div className="relative mb-4">
             <input
               type="text"
@@ -155,11 +159,10 @@ const ShopListItems = () => {
               <FaSearch />
             </button>
           </div>
-          {/* Category Section */}
           <div className="mb-4 text-black">
             <h2 className="font-semibold mb-2">Category</h2>
-            {category.map((onecategory, index) => (
-              <div key={index} className="flex items-center mb-1">
+            {category.map((onecategory) => (
+              <div key={onecategory} className="flex items-center mb-1">
                 <input
                   type="checkbox"
                   id={onecategory}
@@ -179,38 +182,13 @@ const ShopListItems = () => {
               Clear Filter
             </button>
           </div>
-          {/* Ad Banner */}
-          <div className="mb-4 relative overflow-hidden rounded-lg">
-            <img
-              src="/left_side.png"
-              alt="Ad"
-              className="w-full h-48 object-cover rounded-lg"
-            />
-
-            <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-50 flex flex-col justify-center items-start text-white text-center p-2 gap-8">
-              <div className="flex flex-col justify-center items-start text-white text-center">
-                <p className="text-lg font-bold">Perfect Taste</p>
-                <p className="text-sm">Classic Restaurant</p>
-                <p className="text-lg font-semibold">$45.00</p>
-              </div>
-              <div>
-                <button className="mt-2 pr-3 py-1 text-white rounded flex items-start justify-between">
-                  Shop Now
-                  <span className="ml-2 mt-1">
-                    <FaRegArrowAltCircleRight />
-                  </span>
-                </button>
-              </div>
-            </div>
-          </div>
-          {/* Price Filter */}
           <div className="mb-4 text-black">
             <h2 className="font-semibold mb-2">Filter By Price</h2>
 
             <input
               type="range"
-              min="0"
-              max="5000"
+              min={0}
+              max={5000}
               value={maxPrice}
               className="w-full text-orange-500"
               onChange={(e) => setMaxPrice(Number(e.target.value))}
@@ -227,15 +205,16 @@ const ShopListItems = () => {
             </div>
           </div>
 
-          {/* Latest Products */}
           <div className="mb-4 text-black">
             <h2 className="font-semibold mb-2">Latest Products</h2>
             {products.length > 0 ? (
-              products.map((product: any) => (
-                <div className="flex items-center mb-2">
-                  <img
-                    src={urlFor(product.image.asset).url()}
+              products.map((product: FoodItem) => (
+                <div key={product._id} className="flex items-center mb-2">
+                  <Image
+                    src={urlFor(product.image).url()}
                     alt={product.name}
+                    width={64}
+                    height={48}
                     className="w-16 h-12 object-cover rounded"
                   />
 
@@ -248,21 +227,6 @@ const ShopListItems = () => {
             ) : (
               <p>Loading products...</p>
             )}
-          </div>
-
-          {/* Food Tags */}
-          <div>
-            <h2 className="font-semibold mb-2">Product Tags</h2>
-            <div className="flex flex-wrap gap-2 text-sm">
-              {allTags.slice(0, 25).map((tag, index) => (
-                <span
-                  key={index}
-                  className="px-2 py-1 bg-gray-200 rounded text-gray-700 cursor-pointer hover:bg-orange-500 hover:text-white"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
           </div>
         </div>
       </section>

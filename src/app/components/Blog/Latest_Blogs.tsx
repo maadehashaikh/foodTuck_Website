@@ -7,6 +7,20 @@ import { FaRegThumbsUp } from "react-icons/fa";
 import { MdMessage } from "react-icons/md";
 import { CiShare2 } from "react-icons/ci";
 
+// Define TypeScript types for blog data
+interface BlogPost {
+  _id: string;
+  title: string;
+  description: string;
+  author: string;
+  date: string;
+  image: {
+    asset: {
+      url: string;
+    };
+  };
+}
+
 const client = createClient({
   projectId: "2sz91eg7",
   dataset: "production",
@@ -14,34 +28,34 @@ const client = createClient({
   useCdn: false,
 });
 
-const Latest_Blogs = () => {
-  const [blogdata, setBlogdata] = useState([]);
-  const [loading, setLoading] = useState(true);
+const Latest_Blogs: React.FC = () => {
+  const [blogdata, setBlogdata] = useState<BlogPost[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchBlogs = async () => {
       try {
-        const BlogData = await client.fetch(`
+        const BlogData: BlogPost[] = await client.fetch(`
           *[_type == "blog"] | order(date desc) [0...3] {
-  _id,
-  title,
-  description,
-  author,
-  date,
-  image {
-    asset->{
-      url
-    }
-  }
-}
-`);
+            _id,
+            title,
+            description,
+            author,
+            date,
+            image {
+              asset->{
+                url
+              }
+            }
+          }
+        `);
 
         setBlogdata(BlogData);
-        console.log("Fetched Data: ", BlogData.image); // Logs fetched data
+        console.log("Fetched Data: ", BlogData);
       } catch (error) {
         console.error("Error fetching BlogData:", error);
       } finally {
-        setLoading(false); // Ensures loading state is updated after fetching
+        setLoading(false);
       }
     };
     fetchBlogs();
@@ -61,12 +75,13 @@ const Latest_Blogs = () => {
         {loading ? (
           <div className="text-center text-amber-500 text-lg">
             <p>Fetching data from API...</p>
-            <div className="spinner-border animate-spin inline-block w-8 h-8 border-4 border-t-4 border-amber-500 rounded-full"></div>{" "}
+            <div className="spinner-border animate-spin inline-block w-8 h-8 border-4 border-t-4 border-amber-500 rounded-full"></div>
           </div>
         ) : (
           <div className="flex items-center justify-evenly gap-0">
             {blogdata.length > 0 ? (
-              blogdata.map((post: any) => (
+              blogdata.map((post: BlogPost) => (
+                
                 <div
                   key={post._id}
                   className="bg-black rounded-lg overflow-hidden border-2 border-white w-80 h-[350px]"

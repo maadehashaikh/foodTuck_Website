@@ -1,24 +1,34 @@
 "use client";
-import { useState } from "react";
+import { useState, ChangeEvent, FormEvent } from "react";
 import { FaGoogle, FaApple, FaUser, FaEnvelope, FaLock } from "react-icons/fa";
 
+// Define the type for form data
+interface FormData {
+  name: string;
+  email: string;
+  password: string;
+  remember: boolean;
+}
+
 const SignUp = () => {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     name: "",
     email: "",
     password: "",
     remember: false,
   });
 
-  const handleChange = (e) => {
+  // Define types for event handlers
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
     setFormData({ ...formData, [name]: type === "checkbox" ? checked : value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log("Form submitted:", formData);
   };
+
   return (
     <div className="flex items-center justify-center min-h-screen">
       <div className="bg-white p-8 rounded-lg shadow-md w-96">

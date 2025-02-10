@@ -1,38 +1,47 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { createClient } from "next-sanity";
+import { createClient, type SanityClient } from "next-sanity";
 import Link from "next/link";
 import { IoCalendarNumber } from "react-icons/io5";
 import { FaMessage } from "react-icons/fa6";
 import { FaUserCheck } from "react-icons/fa";
 import { FaLocationArrow } from "react-icons/fa6";
 
-const client = createClient({
+// Blog post type definition
+interface BlogPost {
+  _id: string;
+  title: string;
+  description: string;
+  author: string;
+  date: string;
+  image?: string;
+}
+
+const client: SanityClient = createClient({
   projectId: "2sz91eg7",
   dataset: "production",
   apiVersion: "2024-01-01",
   useCdn: false,
 });
 
-const Latest_Blogs = () => {
-  const [blogdata, setBlogdata] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+const Latest_Blogs: React.FC = () => {
+  const [blogdata, setBlogdata] = useState<BlogPost[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    const fetchBlogs = async () => {
+    const fetchBlogs = async (): Promise<void> => {
       try {
-        const BlogData = await client.fetch(`
+        const BlogData: BlogPost[] = await client.fetch(`
           *[_type == "blog"]{
             _id,
             title,
             description,
             author,
             date,
-            "image" : image.asset->url
+            "image": image.asset->url
           }`);
-
         setBlogdata(BlogData);
-      } catch (error) {
+      } catch (error: unknown) {
         console.error("Error fetching BlogData:", error);
       } finally {
         setLoading(false);
@@ -52,19 +61,19 @@ const Latest_Blogs = () => {
         ) : (
           <div className="flex flex-col items-center justify-evenly gap-8 w-[80%] px-10">
             {blogdata.length > 0 ? (
-              blogdata.map((post) => (
+              blogdata.map((post: BlogPost) => (
                 <div
                   key={post._id}
-                  className=" rounded-lg overflow-hidden border-2 border-white w-auto h-auto"
+                  className="rounded-lg overflow-hidden border-2 border-white w-auto h-auto"
                 >
                   <img
                     src={post.image ? post.image : "/fallback-image.jpg"}
                     alt={post.title || "Blog image"}
                     width={500}
                     height={400}
-                    className=" object-cover"
+                    className="object-cover"
                   />
-                  <div className=" py-2 flex items-start justify-start gap-4">
+                  <div className="py-2 flex items-start justify-start gap-4">
                     <div className="flex items-center justify-normal gap-1">
                       <IoCalendarNumber className="text-amber-500 text-center text-lg" />
                       <p className="text-black text-sm">
@@ -82,7 +91,7 @@ const Latest_Blogs = () => {
                     <div className="flex items-center justify-normal gap-1">
                       <FaUserCheck className="text-amber-500 text-center" />
                       <p className="text-black text-sm">
-                        Author :{post.author}
+                        Author: {post.author}
                       </p>
                     </div>
                   </div>

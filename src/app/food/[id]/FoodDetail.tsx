@@ -9,11 +9,14 @@ import { useCart } from "@/app/context/CartContext";
 import Link from "next/link";
 import { IoFastFoodOutline } from "react-icons/io5";
 import { LiaHashtagSolid } from "react-icons/lia";
-import { FaSquareYoutube } from "react-icons/fa6";
-import { FaInstagramSquare } from "react-icons/fa";
-import { FaFacebook } from "react-icons/fa";
-import { FaTwitterSquare } from "react-icons/fa";
-import { FaShareSquare } from "react-icons/fa";
+import {
+  FaInstagramSquare,
+  FaFacebook,
+  FaTwitterSquare,
+  FaShareSquare,
+} from "react-icons/fa";
+import { FaYoutubeSquare } from "react-icons/fa";
+
 import Recommendation from "@/app/components/ShopDetails/Recommendation";
 
 const client = createClient({
@@ -24,20 +27,34 @@ const client = createClient({
 });
 
 const builder = imageUrlBuilder(client);
-export const urlFor = (source: any) => builder.image(source);
 
-const FoodDetail = () => {
-  const { id } = useParams();
-  const [foodItem, setFoodItem] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+export const urlFor = (source: { asset: { _ref: string } }) =>
+  builder.image(source);
+
+interface FoodItem {
+  _id: string;
+  name: string;
+  description: string;
+  price: number;
+  originalPrice: number;
+  image: { asset: { _ref: string } };
+  available: string;
+  category: string;
+  tags: string[];
+}
+
+const FoodDetail: React.FC = () => {
+  const { id } = useParams<{ id: string }>();
+  const [foodItem, setFoodItem] = useState<FoodItem | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
   const { addToCart } = useCart();
-  const [quantity, setQuantity] = useState(1);
+  const [quantity, setQuantity] = useState<number>(1);
 
   useEffect(() => {
     if (id) {
       const fetchFoodItem = async () => {
         try {
-          const data = await client.fetch(
+          const data: FoodItem = await client.fetch(
             `*[_type == "food" && _id == $id][0]`,
             { id }
           );
@@ -61,7 +78,7 @@ const FoodDetail = () => {
   }
 
   const incQuantity = () => {
-    setQuantity((prevquantity) => prevquantity + 1);
+    setQuantity((prevQuantity) => prevQuantity + 1);
   };
 
   const decreaseQuantity = () => {
@@ -74,7 +91,7 @@ const FoodDetail = () => {
         <div className="flex flex-col sm:flex-col md:flex-row items-center justify-center gap-2">
           <div className="w-full md:w-1/2 flex justify-center">
             <Image
-              src={urlFor(foodItem.image.asset).url()}
+              src={urlFor(foodItem.image).url()}
               alt={foodItem.name}
               width={300}
               height={200}
@@ -86,7 +103,7 @@ const FoodDetail = () => {
             <h1 className="text-2xl md:text-3xl font-bold mb-2 text-black">
               {foodItem.name}
             </h1>
-            <p className="mb-2 text-sm text-black  border-b-2 border-gray-200 pb-2">
+            <p className="mb-2 text-sm text-black border-b-2 border-gray-200 pb-2">
               {foodItem.description}
             </p>
             <div className="text-amber-500 text-lg font-semibold">
@@ -121,7 +138,7 @@ const FoodDetail = () => {
                       id: foodItem._id,
                       name: foodItem.name,
                       price: foodItem.price,
-                      image: urlFor(foodItem.image.asset).url(),
+                      image: urlFor(foodItem.image).url(),
                       quantity: quantity,
                     })
                   }
@@ -140,7 +157,7 @@ const FoodDetail = () => {
               </h2>
               <h2 className="text-black flex items-start my-1">
                 <LiaHashtagSolid className="mr-1 font-bold" />
-                Tags: <span className="ml-1">{foodItem.tags}</span>
+                Tags: <span className="ml-1">{foodItem.tags.join(", ")}</span>
               </h2>
             </div>
             <div className="flex items-center justify-start text-black mt-3">
@@ -149,7 +166,7 @@ const FoodDetail = () => {
                 Share:
               </h2>
               <div className="flex flex-row items-center justify-around ml-2">
-                <FaSquareYoutube />
+                <FaYoutubeSquare />
                 <FaInstagramSquare />
                 <FaFacebook />
                 <FaTwitterSquare />

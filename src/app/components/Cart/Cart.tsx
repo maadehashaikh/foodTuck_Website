@@ -7,22 +7,40 @@ import { FaRegCalendarCheck } from "react-icons/fa";
 import AuthGuard from "../Auth/AuthGuard";
 import { useRouter } from "next/navigation";
 
-const Cart = () => {
-  const { cart, updateCartItem, removeFromCart, applyCoupon, discount } =
-    useCart();
-  console.log(discount);
-  const [coupon, setCoupon] = useState("");
+// Define types for cart items and context functions
+interface CartItem {
+  id: string;
+  name: string;
+  image: string;
+  price: number;
+  quantity: number;
+}
 
-  const totalPrice = cart.reduce(
-    (acc, item) => acc + item.price * item.quantity,
+interface CartContextType {
+  cart: CartItem[];
+  updateCartItem: (id: string, quantity: number) => void;
+  removeFromCart: (id: string) => void;
+  applyCoupon: (code: string) => void;
+  discount: number;
+}
+
+const Cart: React.FC = () => {
+  const { cart, updateCartItem, removeFromCart, applyCoupon, discount } =
+    useCart() as CartContextType;
+  
+  const [coupon, setCoupon] = useState<string>("");
+
+  const totalPrice: number = cart.reduce(
+    (acc: number, item: CartItem) => acc + item.price * item.quantity,
     0
   );
-  const discountedPrice = Math.round(
+  const discountedPrice: number = Math.round(
     totalPrice - (totalPrice * discount) / 100
   );
-  const saveRs = totalPrice - discountedPrice;
+  const saveRs: number = totalPrice - discountedPrice;
 
   const router = useRouter();
+
   return (
     <AuthGuard>
       <div className="mx-auto p-4 text-black">
@@ -44,7 +62,7 @@ const Cart = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {cart.map((item) => (
+                  {cart.map((item: CartItem) => (
                     <tr key={item.id} className="border-b border-gray-200">
                       <td className="p-2">
                         <Image
@@ -111,7 +129,9 @@ const Cart = () => {
                       placeholder="Enter Coupon Code"
                       className="border rounded w-full px-4 py-2 border-gray-400"
                       value={coupon}
-                      onChange={(e) => setCoupon(e.target.value)}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        setCoupon(e.target.value)
+                      }
                     />
                     <button
                       className="bg-orange-400 text-white px-4 py-2 rounded"

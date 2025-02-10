@@ -2,7 +2,7 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-const About = () => {
+const About: React.FC = () => {
   return (
     <>
       <section className="bg-black text-white px-4 sm:px-8 lg:px-16 py-12 lg:py-24">
@@ -50,6 +50,7 @@ const About = () => {
                 width={660}
                 height={330}
                 className="rounded-lg object-cover w-full"
+                priority
               />
             </div>
             <Image

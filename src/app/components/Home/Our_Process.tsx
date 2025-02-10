@@ -1,7 +1,7 @@
 import React from "react";
 import { FaPlayCircle } from "react-icons/fa";
 
-const Our_Process = () => {
+const Our_Process: React.FC = () => {
   return (
     <>
       <section className=" h-[90vh] text-white bg-black">

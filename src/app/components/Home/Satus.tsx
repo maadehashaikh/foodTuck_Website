@@ -1,6 +1,7 @@
 import React from "react";
 import Image from "next/image";
-const Status = () => {
+
+const Status: React.FC = () => {
   return (
     <div className="bg-black py-3">
       <div className="relative bg-black text-white">

@@ -1,8 +1,20 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { createClient } from "next-sanity";
+import { createClient, SanityDocument } from "next-sanity";
 import Image from "next/image";
 import Link from "next/link";
+
+// Define the Chef type
+interface ChefType {
+  _id: string;
+  name: string;
+  position: string;
+  image?: {
+    asset?: {
+      url: string;
+    };
+  };
+}
 
 const client = createClient({
   projectId: "2sz91eg7",
@@ -11,12 +23,12 @@ const client = createClient({
   useCdn: false,
 });
 
-const Chef = () => {
-  const [chefs, setChefs] = useState([]);
-  const [loading, setLoading] = useState(true);
+const Chef: React.FC = () => {
+  const [chefs, setChefs] = useState<ChefType[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    const fetchChefs = async () => {
+    const fetchChefs = async (): Promise<void> => {
       try {
         const query = `
         *[_type == "chef" && available == true && name != "Jorina Begum" && name != "M. Mohammad"] {
@@ -29,8 +41,8 @@ const Chef = () => {
             }
           }
         }`;
-        const data = await client.fetch(query);
-        setChefs(data);
+        const data: SanityDocument[] = await client.fetch(query);
+        setChefs(data as ChefType[]);
       } catch (error) {
         console.error("Error fetching chefs:", error);
       } finally {
@@ -49,14 +61,13 @@ const Chef = () => {
           <span className="text-amber-500">Me</span>et Our Chef
         </h1>
 
-        {/* Show loading message while fetching data */}
         {loading ? (
           <p className="text-center text-amber-500 text-xl">Loading chefs...</p>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
-            {chefs.map((chef: any) => (
+            {chefs.map((chef: ChefType) => (
               <div
-                key={chef._id}
+                key={chef?._id}
                 className="bg-gray-900 rounded-lg overflow-hidden shadow-lg"
               >
                 <div className="relative h-72 flex">
@@ -71,7 +82,7 @@ const Chef = () => {
                       {chef.name}
                     </h3>
                     <p className="text-black font-light ml-2">
-                      {chef.position}
+                      {chef?.position}
                     </p>
                   </span>
                 </div>

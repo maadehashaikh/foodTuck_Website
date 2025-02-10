@@ -3,7 +3,7 @@ import React from "react";
 import BlogDetail from "./BlogDetail";
 import RightSide from "@/app/blog/RightSide";
 
-const page = () => {
+const page: React.FC = () => {
   return (
     <>
       <NormalNavBar />

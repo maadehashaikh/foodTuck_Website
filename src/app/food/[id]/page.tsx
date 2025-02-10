@@ -2,7 +2,7 @@ import React from "react";
 import FoodDetail from "./FoodDetail";
 import NormalNavBar from "@/app/components/General/NormalNavBar";
 
-const FoodItem = () => {
+const FoodItem: React.FC = () => {
   return (
     <div>
       <NormalNavBar />

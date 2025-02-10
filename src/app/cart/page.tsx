@@ -3,7 +3,7 @@ import Cart from "../components/Cart/Cart";
 import NormalNavBar from "../components/General/NormalNavBar";
 import PageName from "../components/General/PageName";
 
-const page = () => {
+const page: React.FC = () => {
   return (
     <div>
       <NormalNavBar />
