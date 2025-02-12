@@ -23,7 +23,10 @@ interface ShippingDetails {
 }
 
 const Checkout_Comp: React.FC = () => {
-  const { cart, discount } = useCart() as { cart: CartItem[]; discount: number };
+  const { cart, discount } = useCart() as {
+    cart: CartItem[];
+    discount: number;
+  };
 
   const totalPrice: number = cart.reduce(
     (acc: number, item: CartItem) => acc + item.price * item.quantity,
@@ -73,6 +76,14 @@ const Checkout_Comp: React.FC = () => {
     try {
       await client.create(orderData);
       toast.success("Order placed successfully");
+      setShippingDetails({
+        firstname: "",
+        lastname: "",
+        email: "",
+        phone: "",
+        address: "",
+        zipCode: "",
+      });
     } catch (error: unknown) {
       if (error instanceof Error) {
         console.error("Error caught while creating order", error.message);
@@ -159,7 +170,10 @@ const Checkout_Comp: React.FC = () => {
             <div className="space-y-4">
               {cart.length > 0 ? (
                 cart.map((item: CartItem) => (
-                  <div key={item.id} className="flex items-center justify-start">
+                  <div
+                    key={item.id}
+                    className="flex items-center justify-start"
+                  >
                     <div>
                       <img
                         src={item.image}

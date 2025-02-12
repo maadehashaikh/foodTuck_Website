@@ -5,7 +5,7 @@ import Footer from "./components/General/Footer";
 import { CartProvider } from "./context/CartContext";
 import { ClerkProvider } from "@clerk/nextjs";
 import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer } from "react-toastify"; // Import ToastContainer
+import { ToastContainer } from "react-toastify";
 import type { ReactNode } from "react";
 
 const geistSans = Geist({
@@ -27,9 +27,7 @@ interface RootLayoutProps {
   children: ReactNode;
 }
 
-export default function RootLayout({
-  children,
-}: Readonly<RootLayoutProps>) {
+export default function RootLayout({ children }: Readonly<RootLayoutProps>) {
   return (
     <html lang="en">
       <body

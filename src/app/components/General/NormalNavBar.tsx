@@ -28,17 +28,14 @@ const NormalNavBar = () => {
             <Link href="/blog" className="hover:text-amber-600">
               Blog
             </Link>
-            <Link href="/FAQ" className="hover:text-amber-600">
-              Pages
-            </Link>
             <Link href="/about" className="hover:text-amber-600">
               About
             </Link>
             <Link href="/shoplist" className="hover:text-amber-600">
               Shop
             </Link>
-            <Link href="/contact" className="hover:text-amber-600">
-              Contact
+            <Link href="/faq" className="hover:text-amber-600">
+              FAQ
             </Link>
             {/* </div> */}
           </nav>
